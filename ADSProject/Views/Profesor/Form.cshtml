@@ -13,11 +13,12 @@
     <div class="col-md-4">
         <form asp-action="Form">
             <input type="hidden" id="operacion" value="@ViewData["Operaciones"]" />
+            <input type="hidden" id="_redirectURL" value="@Url.Action("Index" , "Profesor")" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-            
-                <input asp-for="idProfesor" class="form-control"  type="hidden"/>
-               
+
+                <input asp-for="idProfesor" class="form-control" type="hidden" />
+
             </div>
             <div class="form-group">
                 <label asp-for="nombreProfesor" class="control-label"></label>
@@ -53,5 +54,11 @@
         if ($("#operacion").val() == "leer") {
             $("form").find("input,select").attr("disabled", true);
         }
-    });</script>
+});
+
+    //Agregando ajax
+    $("form").addClass("form-ajax");
+    //activando ajax
+    initAjaxForm();
+    </script>
 }

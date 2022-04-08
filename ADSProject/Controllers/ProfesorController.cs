@@ -82,7 +82,7 @@ namespace ADSProyect.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult Delete(int idProfesor)
         {
             try
