@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace ADSProyect.Controllers
 {
-    public class CarreraController : Controller
+    public class GrupoController : Controller
     {
-        private readonly ICarreraRepository carreraRepository;
+        private readonly IGrupoRepository grupoRepository;
 
-        public CarreraController(ICarreraRepository carreraRepository)
+        public GrupoController(IGrupoRepository grupoRepository)
         {
-            this.carreraRepository = carreraRepository; 
+            this.grupoRepository = grupoRepository;
         }
 
         [HttpGet]
@@ -23,7 +23,7 @@ namespace ADSProyect.Controllers
         {
             try
             {
-                var item = carreraRepository.obtenerCarreras();
+                var item = grupoRepository.obtenerGrupos();
 
                 return View(item);
             }
@@ -35,20 +35,20 @@ namespace ADSProyect.Controllers
         }
 
         [HttpGet]
-        public IActionResult Form(int? idCarrera, Operaciones operaciones)
+        public IActionResult Form(int? idGrupo, Operaciones operaciones)
         {
             try
             {
-                var carrera = new CarreraViewModel();
+                var Grupo = new GruposViewModel();
 
-                if (idCarrera.HasValue)
+                if (idGrupo.HasValue)
                 {
-                    carrera = carreraRepository.obtenerCarreraPorID(idCarrera.Value);
+                    Grupo = grupoRepository.obtenerGruposPorID(idGrupo.Value);
                 }
                 // Indica el tipo de operacion que es esta realizando
                 ViewData["Operaciones"] = operaciones;
 
-                return View(carrera);
+                return View(Grupo);
 
             }
             catch (Exception)
@@ -59,18 +59,18 @@ namespace ADSProyect.Controllers
         }
 
         [HttpPost]
-        public IActionResult Form(CarreraViewModel carreraViewModel)
+        public IActionResult Form(GruposViewModel gruposViewModel)
         {
             try
             {
-                if (carreraViewModel.idCarrera == 0) // En caso de insertar
+                if (gruposViewModel.idGrupo == 0) // En caso de insertar
                 {
-                    carreraRepository.agregarCarrera(carreraViewModel);
+                    grupoRepository.agregarGrupo(gruposViewModel);
                 }
                 else // En caso de actualizar
                 {
-                    carreraRepository.actualizarCarrera
-                        (carreraViewModel.idCarrera, carreraViewModel);
+                    grupoRepository.actualizarGrupo
+                        (gruposViewModel.idGrupo, gruposViewModel);
                 }
 
                 return RedirectToAction("Index");
@@ -83,11 +83,11 @@ namespace ADSProyect.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(int idCarrera)
+        public IActionResult Delete(int idGrupo)
         {
             try
             {
-                carreraRepository.eliminarCarrera(idCarrera);
+                grupoRepository.eliminarGrupo(idGrupo);
             }
             catch (Exception)
             {
@@ -99,4 +99,3 @@ namespace ADSProyect.Controllers
         }
     }
 }
-
