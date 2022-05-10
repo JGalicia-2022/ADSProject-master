@@ -7,7 +7,7 @@
 
 <h1>Form</h1>
 
-<h4>ProfesoresViewModel</h4>
+<h4>Profesores</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -35,6 +35,7 @@
                 <input asp-for="correoProfesor" class="form-control" />
                 <span asp-validation-for="correoProfesor" class="text-danger"></span>
             </div>
+            <input type="checkbox" asp-for="estado" value="true" type="hidden" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

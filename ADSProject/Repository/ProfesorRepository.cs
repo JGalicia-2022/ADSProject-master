@@ -1,4 +1,5 @@
-﻿using ADSProyect.Models;
+﻿using ADSProyect.Data;
+using ADSProyect.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,22 +9,26 @@ namespace ADSProyect.Repository
 {
     public class ProfesorRepository : IProfesorRepository
     {
-        private readonly List<ProfesoresViewModel> lstProfesores;
+        //private readonly List<ProfesoresViewModel> lstProfesores;
 
-        public ProfesorRepository()
+        private readonly ApplicationDbContext applicationDbContext;
+
+        public ProfesorRepository(ApplicationDbContext applicationDbContext)
         {
-            lstProfesores = new List<ProfesoresViewModel>
-            {
-                new ProfesoresViewModel{ idProfesor = 1, nombreProfesor = "Juan", apellidoProfesor = "Perez",
-                     correoProfesor = "Juan@usonsonate.edu.sv"}
-            };
+            /* lstProfesores = new List<ProfesoresViewModel>
+             {
+                 new ProfesoresViewModel{ idProfesor = 1, nombreProfesor = "Juan", apellidoProfesor = "Perez",
+                      correoProfesor = "Juan@usonsonate.edu.sv"}
+             };*/
+
+            this.applicationDbContext = applicationDbContext;
         }
 
         public int agregarProfesor(ProfesoresViewModel profesoresViewModel)
         {
             try
             {
-                if (lstProfesores.Count > 0)
+                /*if (lstProfesores.Count > 0)
                 {
                     profesoresViewModel.idProfesor = lstProfesores.Last().idProfesor + 1;
                 }
@@ -32,7 +37,13 @@ namespace ADSProyect.Repository
                     profesoresViewModel.idProfesor = 1;
                 }
                 lstProfesores.Add(profesoresViewModel);
+                return profesoresViewModel.idProfesor;*/
+
+                applicationDbContext.Profesores.Add(profesoresViewModel);
+                applicationDbContext.SaveChanges();
+
                 return profesoresViewModel.idProfesor;
+
             }
             catch (Exception)
             {
@@ -44,7 +55,15 @@ namespace ADSProyect.Repository
         {
             try
             {
-                lstProfesores[lstProfesores.FindIndex(x => x.idProfesor == idProfesor)] = profesoresViewModel;
+                //lstProfesores[lstProfesores.FindIndex(x => x.idProfesor == idProfesor)] = profesoresViewModel;
+
+
+                var item = applicationDbContext.Profesores.SingleOrDefault(x => x.idProfesor == idProfesor);
+
+                applicationDbContext.Entry(item).CurrentValues.SetValues(profesoresViewModel);
+
+                applicationDbContext.SaveChanges();
+                
                 return profesoresViewModel.idProfesor;
             }
             catch (Exception)
@@ -59,7 +78,21 @@ namespace ADSProyect.Repository
         {
             try
             {
-                lstProfesores.RemoveAt(lstProfesores.FindIndex(x => x.idProfesor == idProfesor));
+                //lstProfesores.RemoveAt(lstProfesores.FindIndex(x => x.idProfesor == idProfesor));
+
+                var item = applicationDbContext.Profesores.SingleOrDefault(x => x.idProfesor == idProfesor);
+
+                //Borrar registro por completo
+                /*applicationDbContext.Profesores.Remove(item);*/
+
+                item.estado = false;
+
+                applicationDbContext.Attach(item);
+
+                applicationDbContext.Entry(item).Property(x => x.estado).IsModified = true;
+
+                applicationDbContext.SaveChanges();
+
                 return true;
             }
             catch (Exception)
@@ -74,7 +107,10 @@ namespace ADSProyect.Repository
         {
             try
             {
-                var item = lstProfesores.Find(x => x.idProfesor == idProfesor);
+                // var item = lstProfesores.Find(x => x.idProfesor == idProfesor);
+
+                var item = applicationDbContext.Profesores.SingleOrDefault(x => x.idProfesor == idProfesor);
+
                 return item;
             }
             catch (Exception)
@@ -89,7 +125,11 @@ namespace ADSProyect.Repository
             {
                 try
                 {
-                    return lstProfesores;
+                    // Obtener todos los Profesores sin filtro
+                    // return applicationDbContext.Profesores.ToList();
+
+                    // Obtener todos los estudiantes con filtro(estado = 1)
+                    return applicationDbContext.Profesores.Where(x => x.estado == true).ToList();
                 }
                 catch (Exception)
                 {
