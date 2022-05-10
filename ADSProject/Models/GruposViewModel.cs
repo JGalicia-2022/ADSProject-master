@@ -10,6 +10,7 @@ namespace ADSProyect.Models
     public class GruposViewModel
     {
         [Display(Name = "ID Grupo")]
+        [Key]
         public int idGrupo { get; set; }
 
 
@@ -32,5 +33,7 @@ namespace ADSProyect.Models
         [Required(ErrorMessage = Constants.REQUIRED_FIELD)]
         [Display(Name = "Año")]
         public int anio { get; set; }
+
+        public bool estado { get; set;  }
     }
 }

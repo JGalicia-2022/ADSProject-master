@@ -29,11 +29,11 @@ namespace ADSProject
             services.AddControllersWithViews();
 
             // Inyeccion de dependencias
-            services.AddSingleton<IEstudianteRepository, EstudianteRepository>();
-            services.AddSingleton<IMateriaRepository, MateriaRepository>();
-            services.AddSingleton<IProfesorRepository, ProfesorRepository>();
-            services.AddSingleton<ICarreraRepository, CarreraRepository>();
-            services.AddSingleton<IGrupoRepository, GrupoRepository>();
+            services.AddTransient<IEstudianteRepository, EstudianteRepository>();
+            services.AddTransient<IMateriaRepository, MateriaRepository>();
+            services.AddTransient<IProfesorRepository, ProfesorRepository>();
+            services.AddTransient<ICarreraRepository, CarreraRepository>();
+            services.AddTransient<IGrupoRepository, GrupoRepository>();
 
             //Configuracion de DB
             services.AddDbContext<ApplicationDbContext>(options =>

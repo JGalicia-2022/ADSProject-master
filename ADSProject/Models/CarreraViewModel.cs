@@ -2,14 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ADSProyect.Models
 {
+    [Table("Carrera")]
     public class CarreraViewModel
     {
         [Display(Name = "ID")]
+        [Key]
         public int idCarrera { get; set; }
 
         [Required(ErrorMessage = Constants.REQUIRED_FIELD)]
@@ -22,5 +25,7 @@ namespace ADSProyect.Models
 
         [Display(Name = "Nombre Carrera")]
         public string nombreCarrera { get; set; }
+
+        public bool estado { get; set; }
     }
 }
