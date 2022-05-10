@@ -1,4 +1,5 @@
 ﻿using ADSProject.Models;
+using ADSProyect.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,22 +9,26 @@ namespace ADSProject.Repository
 {
     public class MateriaRepository : IMateriaRepository
     {
-        private readonly List<MateriaViewModel> lstMaterias;
+        //private readonly List<MateriaViewModel> lstMaterias;
 
-        public MateriaRepository()
+        private readonly ApplicationDbContext applicationDbContext;
+
+        public MateriaRepository(ApplicationDbContext applicationDbContext)
         {
-            lstMaterias = new List<MateriaViewModel>
+            /*lstMaterias = new List<MateriaViewModel>
             {
                 new MateriaViewModel{ idmateria =1 , nombreMateria = "Analisia de Sistemas"}
-            };
+            };*/
+
+            this.applicationDbContext = applicationDbContext;
         }
 
         public int agregarMaterias(MateriaViewModel materiaViewModel)
         {
             try
             {
-             
-                if(lstMaterias.Count > 0)
+
+                /*if(lstMaterias.Count > 0)
                 {
                     materiaViewModel.idmateria = lstMaterias.Last().idmateria + 1;
                 }
@@ -33,7 +38,13 @@ namespace ADSProject.Repository
 
                 }
                 lstMaterias.Add(materiaViewModel);
+                return materiaViewModel.idmateria;*/
+
+                applicationDbContext.Materias.Add(materiaViewModel);
+                applicationDbContext.SaveChanges();
+
                 return materiaViewModel.idmateria;
+
             }
             catch (Exception)
             {
@@ -45,8 +56,16 @@ namespace ADSProject.Repository
         {
             try
             {
-                lstMaterias[lstMaterias.FindIndex(x => x.idmateria == idMateria)] = materiaViewModel;
+                // lstMaterias[lstMaterias.FindIndex(x => x.idmateria == idMateria)] = materiaViewModel;
+
+                var item = applicationDbContext.Materias.SingleOrDefault(x => x.idmateria == idMateria);
+
+                applicationDbContext.Entry(item).CurrentValues.SetValues(materiaViewModel);
+
+                applicationDbContext.SaveChanges();
+
                 return materiaViewModel.idmateria;
+
             }
             catch (Exception)
             {
@@ -60,7 +79,22 @@ namespace ADSProject.Repository
         {
             try
             {
-                lstMaterias.RemoveAt(lstMaterias.FindIndex(x => x.idmateria == idMateria));
+                //lstMaterias.RemoveAt(lstMaterias.FindIndex(x => x.idmateria == idMateria));
+
+                var item = applicationDbContext.Materias.SingleOrDefault(x => x.idmateria == idMateria);
+
+                //Borrar registro por completo
+                /*applicationDbContext.Materias.Remove(item);*/
+
+                item.estado = false;
+
+                applicationDbContext.Attach(item);
+
+                applicationDbContext.Entry(item).Property(x => x.estado).IsModified = true;
+
+                applicationDbContext.SaveChanges();
+
+
                 return true;
             }
             catch (Exception)
@@ -74,7 +108,10 @@ namespace ADSProject.Repository
         {
             try
             {
-                var item = lstMaterias.Find(x => x.idmateria == idMateria);
+                //var item = lstMaterias.Find(x => x.idmateria == idMateria);
+
+                var item = applicationDbContext.Materias.SingleOrDefault(x => x.idmateria == idMateria);
+
                 return item;
 
             }
@@ -89,7 +126,11 @@ namespace ADSProject.Repository
         {
             try
             {
-                return lstMaterias;
+                // Obtener todos las Materias sin filtro
+                // return applicationDbContext.Estudiantes.ToList();
+
+                // Obtener todos las Materias con filtro(estado = 1)
+                return applicationDbContext.Materias.Where(x => x.estado == true).ToList();
 
             }
             catch (Exception)

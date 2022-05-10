@@ -85,7 +85,7 @@ namespace ADSProyect.Repository
                 var item = applicationDbContext.Carreras.SingleOrDefault(x => x.idCarrera == idCarrera);
 
                 //Borrar registro por completo
-                /*applicationDbContext.Estudiantes.Remove(item);*/
+                /*applicationDbContext.Carreras.Remove(item);*/
 
                 item.estado = false;
 
